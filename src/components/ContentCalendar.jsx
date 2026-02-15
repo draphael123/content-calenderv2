@@ -1046,8 +1046,8 @@ const ContentCalendar = () => {
           onChange={e => setFilters({ ...filters, type: e.target.value })}
         >
           <option value="all">All Types</option>
-          {contentTypes.map(type => (
-            <option key={type} value={type}>{type}</option>
+          {Object.entries(contentTypes).map(([key, type]) => (
+            <option key={key} value={key}>{type.icon} {type.name}</option>
           ))}
         </select>
         <select 
