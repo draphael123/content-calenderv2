@@ -939,6 +939,9 @@ const ContentCalendar = () => {
           </h1>
           <p style={{ margin: '4px 0 0', color: '#64748B', fontSize: '13px' }}>
             Organic Content Team • Fountain
+            {!import.meta.env.VITE_SHEETS_API_URL && (
+              <span style={{ marginLeft: '12px', color: '#F59E0B', fontSize: '11px' }}>🧪 Mock Mode (No API configured)</span>
+            )}
             {syncing && <span style={{ marginLeft: '12px', color: '#6366F1' }}>🔄 Syncing...</span>}
           </p>
         </div>
