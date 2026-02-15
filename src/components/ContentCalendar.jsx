@@ -923,6 +923,34 @@ const ContentCalendar = () => {
         }
       `}</style>
 
+      {/* Demo Data Banner */}
+      {!import.meta.env.VITE_SHEETS_API_URL && (
+        <div style={{
+          background: 'linear-gradient(135deg, #F59E0B, #D97706)',
+          color: '#FFFFFF',
+          padding: '16px 20px',
+          borderRadius: '12px',
+          marginBottom: '20px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)',
+          border: '2px solid rgba(255, 255, 255, 0.2)',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '24px' }}>🧪</span>
+            <div>
+              <div style={{ fontSize: '16px', fontWeight: '700', marginBottom: '4px' }}>
+                DEMO MODE - Sample Data
+              </div>
+              <div style={{ fontSize: '13px', opacity: 0.9 }}>
+                This calendar is displaying demo/mock data. No Google Sheets connection configured.
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
@@ -939,9 +967,6 @@ const ContentCalendar = () => {
           </h1>
           <p style={{ margin: '4px 0 0', color: '#64748B', fontSize: '13px' }}>
             Organic Content Team • Fountain
-            {!import.meta.env.VITE_SHEETS_API_URL && (
-              <span style={{ marginLeft: '12px', color: '#F59E0B', fontSize: '11px' }}>🧪 Mock Mode (No API configured)</span>
-            )}
             {syncing && <span style={{ marginLeft: '12px', color: '#6366F1' }}>🔄 Syncing...</span>}
           </p>
         </div>
