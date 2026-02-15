@@ -20,6 +20,7 @@ const ContentCalendar = () => {
     platform: 'all',
     status: 'all',
     pillar: 'all',
+    type: 'all',
   });
 
   // API State
@@ -38,6 +39,15 @@ const ContentCalendar = () => {
     tiktok: { name: 'TikTok', icon: '♪', color: '#00F2EA', bg: '#00F2EA15' },
     instagram: { name: 'Instagram', icon: '◎', color: '#E1306C', bg: '#E1306C15' },
     youtube: { name: 'YouTube', icon: '▶', color: '#FF0000', bg: '#FF000015' },
+  };
+
+  const contentTypes = {
+    'Educational': { name: 'Educational', icon: '📚', color: '#3B82F6' },
+    'Testimonial': { name: 'Testimonial', icon: '💬', color: '#10B981' },
+    'Q&A': { name: 'Q&A', icon: '❓', color: '#8B5CF6' },
+    'Behind-the-scenes': { name: 'Behind-the-scenes', icon: '🎬', color: '#F59E0B' },
+    'Promotional': { name: 'Promotional', icon: '📢', color: '#EF4444' },
+    'Announcement': { name: 'Announcement', icon: '📣', color: '#EC4899' },
   };
 
   const contentPillars = {
@@ -177,6 +187,7 @@ const ContentCalendar = () => {
       if (filters.platform !== 'all' && c.platform !== filters.platform) return false;
       if (filters.status !== 'all' && c.status !== filters.status) return false;
       if (filters.pillar !== 'all' && c.pillar !== filters.pillar) return false;
+      if (filters.type !== 'all' && c.type !== filters.type) return false;
       return true;
     });
   }, [contents, filters]);
