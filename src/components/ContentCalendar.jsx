@@ -57,8 +57,6 @@ const ContentCalendar = () => {
     lifestyle: { name: 'Lifestyle & Wellness', color: '#F59E0B', icon: '🌿' },
     testimonials: { name: 'Patient Stories', color: '#8B5CF6', icon: '💬' },
   };
-
-  const contentTypes = ['Educational', 'Testimonial', 'Behind-the-scenes', 'Product', 'Trending', 'Q&A'];
   
   const statuses = {
     draft: { label: 'Draft', color: '#94A3B8', bg: '#F1F5F9' },
