@@ -3,9 +3,10 @@ const API_URL = import.meta.env.VITE_SHEETS_API_URL;
 // Mock data for testing when API URL is not set
 const mockTeam = [
   { id: 1, name: 'Momsh D', avatar: '👩‍🎨', color: '#E8B4B8', role: 'Content Lead' },
-  { id: 2, name: 'Momsh V Jerome', avatar: '👨‍💻', color: '#A8D5BA', role: 'Video Editor' },
-  { id: 3, name: 'Aryia', avatar: '👩‍🎤', color: '#B8C9E8', role: 'Social Manager' },
+  { id: 2, name: 'Momsh V', avatar: '👨‍💻', color: '#A8D5BA', role: 'Video Editor' },
+  { id: 3, name: 'Momsh A', avatar: '👩‍🎤', color: '#B8C9E8', role: 'Social Manager' },
   { id: 4, name: 'Momsh P', avatar: '🧑‍🎬', color: '#E8D4B8', role: 'Content Creator' },
+  { id: 5, name: 'Momsh R', avatar: '👨‍🎨', color: '#D4B8E8', role: 'Content Creator' },
 ];
 
 const mockContents = [
