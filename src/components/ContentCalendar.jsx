@@ -1042,6 +1042,16 @@ const ContentCalendar = () => {
         </select>
         <select 
           className="filter-select"
+          value={filters.type}
+          onChange={e => setFilters({ ...filters, type: e.target.value })}
+        >
+          <option value="all">All Types</option>
+          {contentTypes.map(type => (
+            <option key={type} value={type}>{type}</option>
+          ))}
+        </select>
+        <select 
+          className="filter-select"
           value={filters.status}
           onChange={e => setFilters({ ...filters, status: e.target.value })}
         >
@@ -1060,10 +1070,10 @@ const ContentCalendar = () => {
             <option key={key} value={key}>{p.icon} {p.name}</option>
           ))}
         </select>
-        {(filters.assignee !== 'all' || filters.platform !== 'all' || filters.status !== 'all' || filters.pillar !== 'all') && (
+        {(filters.assignee !== 'all' || filters.platform !== 'all' || filters.status !== 'all' || filters.pillar !== 'all' || filters.type !== 'all') && (
           <button 
             className="btn btn-ghost btn-sm"
-            onClick={() => setFilters({ assignee: 'all', platform: 'all', status: 'all', pillar: 'all' })}
+            onClick={() => setFilters({ assignee: 'all', platform: 'all', status: 'all', pillar: 'all', type: 'all' })}
           >
             Clear
           </button>
