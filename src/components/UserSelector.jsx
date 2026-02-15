@@ -8,7 +8,7 @@ const UserSelector = ({ teamMembers, onSelect }) => {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'rgba(0,0,0,0.8)',
+      background: 'rgba(236, 72, 153, 0.15)',
       backdropFilter: 'blur(4px)',
       display: 'flex',
       alignItems: 'center',
@@ -16,27 +16,27 @@ const UserSelector = ({ teamMembers, onSelect }) => {
       zIndex: 1000,
     }}>
       <div style={{
-        background: 'linear-gradient(135deg, #1e1e3f, #252550)',
+        background: 'linear-gradient(135deg, #FFFFFF, #FDF2F8)',
         borderRadius: '16px',
         padding: '32px',
         maxWidth: '500px',
         width: '90%',
-        border: '1px solid rgba(255,255,255,0.1)',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+        border: '1px solid rgba(236, 72, 153, 0.2)',
+        boxShadow: '0 20px 60px rgba(236, 72, 153, 0.2)',
       }}>
         <h2 style={{
           margin: '0 0 8px',
           fontSize: '24px',
           fontWeight: '700',
           fontFamily: "'Space Mono', monospace",
-          color: '#E2E8F0',
+          color: '#831843',
         }}>
           Who are you?
         </h2>
         <p style={{
           margin: '0 0 24px',
           fontSize: '14px',
-          color: '#64748B',
+          color: '#9D174D',
         }}>
           Select your profile to get started
         </p>
@@ -54,21 +54,21 @@ const UserSelector = ({ teamMembers, onSelect }) => {
                 alignItems: 'center',
                 gap: '12px',
                 padding: '16px',
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.1)',
+                background: 'rgba(236, 72, 153, 0.06)',
+                border: '1px solid rgba(236, 72, 153, 0.2)',
                 borderRadius: '12px',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                color: '#E2E8F0',
+                color: '#374151',
                 fontSize: '14px',
                 fontWeight: '500',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                e.currentTarget.style.background = 'rgba(236, 72, 153, 0.12)';
                 e.currentTarget.style.transform = 'translateY(-2px)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                e.currentTarget.style.background = 'rgba(236, 72, 153, 0.06)';
                 e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
@@ -86,7 +86,7 @@ const UserSelector = ({ teamMembers, onSelect }) => {
               </div>
               <div style={{ textAlign: 'left' }}>
                 <div style={{ fontWeight: '600' }}>{member.name}</div>
-                <div style={{ fontSize: '12px', color: '#64748B' }}>{member.role}</div>
+                <div style={{ fontSize: '12px', color: '#9D174D' }}>{member.role}</div>
               </div>
             </button>
           ))}

@@ -42,12 +42,14 @@ const ContentCalendar = () => {
   };
 
   const contentTypes = {
-    'Educational': { name: 'Educational', icon: '📚', color: '#3B82F6' },
-    'Testimonial': { name: 'Testimonial', icon: '💬', color: '#10B981' },
-    'Q&A': { name: 'Q&A', icon: '❓', color: '#8B5CF6' },
-    'Behind-the-scenes': { name: 'Behind-the-scenes', icon: '🎬', color: '#F59E0B' },
-    'Promotional': { name: 'Promotional', icon: '📢', color: '#EF4444' },
-    'Announcement': { name: 'Announcement', icon: '📣', color: '#EC4899' },
+    'Educational': { name: 'Educational', icon: '📚', color: '#DB2777' },
+    'Testimonial': { name: 'Testimonial', icon: '💬', color: '#BE185D' },
+    'Q&A': { name: 'Q&A', icon: '❓', color: '#9D174D' },
+    'Behind-the-scenes': { name: 'Behind-the-scenes', icon: '🎬', color: '#EC4899' },
+    'Product': { name: 'Product', icon: '📦', color: '#F472B6' },
+    'Trending': { name: 'Trending', icon: '📈', color: '#F9A8D4' },
+    'Promotional': { name: 'Promotional', icon: '📢', color: '#EC4899' },
+    'Announcement': { name: 'Announcement', icon: '📣', color: '#F472B6' },
   };
 
   const contentPillars = {
@@ -59,7 +61,7 @@ const ContentCalendar = () => {
   };
   
   const statuses = {
-    draft: { label: 'Draft', color: '#94A3B8', bg: '#F1F5F9' },
+    draft: { label: 'Draft', color: '#9D174D', bg: '#F1F5F9' },
     review: { label: 'In Review', color: '#F59E0B', bg: '#FEF3C7' },
     approved: { label: 'Approved', color: '#10B981', bg: '#D1FAE5' },
     scheduled: { label: 'Scheduled', color: '#6366F1', bg: '#E0E7FF' },
@@ -339,7 +341,11 @@ const ContentCalendar = () => {
     setSelectedDate(content.publishDate);
     setEditingContent(content);
     setActiveTab('details');
-    setNewContent({ ...content });
+    setNewContent({
+      ...content,
+      comments: content.comments || [],
+      assetLinks: content.assetLinks || [],
+    });
     setShowModal(true);
   };
 
@@ -373,7 +379,7 @@ const ContentCalendar = () => {
     };
     setNewContent({
       ...newContent,
-      comments: [...newContent.comments, comment],
+      comments: [...(newContent.comments || []), comment],
     });
     setNewComment('');
   };
@@ -382,7 +388,7 @@ const ContentCalendar = () => {
     if (!newAssetLink.url.trim() || !newAssetLink.label.trim()) return;
     setNewContent({
       ...newContent,
-      assetLinks: [...newContent.assetLinks, { ...newAssetLink }],
+      assetLinks: [...(newContent.assetLinks || []), { ...newAssetLink }],
     });
     setNewAssetLink({ type: 'canva', url: '', label: '' });
   };
@@ -390,7 +396,7 @@ const ContentCalendar = () => {
   const handleRemoveAssetLink = (index) => {
     setNewContent({
       ...newContent,
-      assetLinks: newContent.assetLinks.filter((_, i) => i !== index),
+      assetLinks: (newContent.assetLinks || []).filter((_, i) => i !== index),
     });
   };
 
@@ -509,7 +515,7 @@ const ContentCalendar = () => {
         <div style={{
           fontSize: '11px',
           fontWeight: '500',
-          color: '#E2E8F0',
+          color: '#374151',
           marginBottom: '6px',
           lineHeight: '1.3',
           display: '-webkit-box',
@@ -524,7 +530,7 @@ const ContentCalendar = () => {
             {status.label}
           </span>
           {content.publishTime && (
-            <span style={{ fontSize: '10px', color: '#94A3B8', fontWeight: '500' }}>
+            <span style={{ fontSize: '10px', color: '#9D174D', fontWeight: '500' }}>
               🕐 {content.publishTime.replace(/^(\d{1,2}):(\d{2})$/, (_, h, m) => {
                 const hour = parseInt(h);
                 const ampm = hour >= 12 ? 'PM' : 'AM';
@@ -539,10 +545,10 @@ const ContentCalendar = () => {
             </span>
           )}
           {content.comments && content.comments.length > 0 && (
-            <span style={{ fontSize: '10px', color: '#64748B' }}>💬 {content.comments.length}</span>
+            <span style={{ fontSize: '10px', color: '#9D174D' }}>💬 {content.comments.length}</span>
           )}
           {content.reminderSet && (
-            <span style={{ fontSize: '10px', color: '#64748B' }}>🔔</span>
+            <span style={{ fontSize: '10px', color: '#9D174D' }}>🔔</span>
           )}
         </div>
       </div>
@@ -559,11 +565,11 @@ const ContentCalendar = () => {
     return (
       <div style={{
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%)',
+        background: 'linear-gradient(135deg, #FFF5F7 0%, #FCE7F3 50%, #FDF2F8 100%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        color: '#E2E8F0',
+        color: '#831843',
       }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '24px', marginBottom: '12px' }}>⏳</div>
@@ -576,10 +582,10 @@ const ContentCalendar = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%)',
+      background: 'linear-gradient(135deg, #FFF5F7 0%, #FCE7F3 50%, #FDF2F8 100%)',
       fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif",
       padding: '20px',
-      color: '#E2E8F0',
+      color: '#4B5563',
     }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
@@ -587,19 +593,20 @@ const ContentCalendar = () => {
         * { box-sizing: border-box; }
         
         .calendar-day {
-          background: rgba(255,255,255,0.03);
-          border: 1px solid rgba(255,255,255,0.06);
+          background: rgba(255,255,255,0.8);
+          border: 1px solid rgba(236, 72, 153, 0.2);
           border-radius: 12px;
           min-height: 120px;
           padding: 8px;
           transition: all 0.2s ease;
           cursor: pointer;
           overflow: hidden;
+          box-shadow: 0 1px 3px rgba(236, 72, 153, 0.08);
         }
         
         .calendar-day:hover {
-          background: rgba(255,255,255,0.06);
-          border-color: rgba(255,255,255,0.12);
+          background: #FFFFFF;
+          border-color: rgba(236, 72, 153, 0.35);
         }
         
         .calendar-day.week-view {
@@ -607,22 +614,25 @@ const ContentCalendar = () => {
         }
         
         .content-card {
-          background: rgba(255,255,255,0.08);
+          background: #FFFFFF;
           border-radius: 8px;
           padding: 8px 10px;
           margin-bottom: 6px;
           cursor: grab;
           transition: all 0.15s ease;
           border-left: 3px solid;
+          box-shadow: 0 1px 4px rgba(236, 72, 153, 0.1);
+          color: #374151;
         }
         
         .content-card:hover {
-          background: rgba(255,255,255,0.12);
+          background: #FDF2F8;
           transform: scale(1.02);
+          box-shadow: 0 2px 8px rgba(236, 72, 153, 0.15);
         }
         
         .content-card.overdue {
-          background: rgba(239, 68, 68, 0.1);
+          background: #FEE2E2;
         }
         
         .btn {
@@ -636,29 +646,29 @@ const ContentCalendar = () => {
         }
         
         .btn-primary {
-          background: linear-gradient(135deg, #6366F1, #8B5CF6);
+          background: linear-gradient(135deg, #EC4899, #DB2777);
           color: white;
         }
         
         .btn-primary:hover {
           transform: translateY(-1px);
-          box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+          box-shadow: 0 4px 20px rgba(236, 72, 153, 0.4);
         }
         
         .btn-success {
-          background: linear-gradient(135deg, #10B981, #059669);
+          background: linear-gradient(135deg, #DB2777, #BE185D);
           color: white;
         }
         
         .btn-ghost {
           background: transparent;
-          color: #94A3B8;
-          border: 1px solid rgba(255,255,255,0.1);
+          color: #9D174D;
+          border: 1px solid rgba(236, 72, 153, 0.3);
         }
         
         .btn-ghost:hover {
-          background: rgba(255,255,255,0.05);
-          color: #E2E8F0;
+          background: rgba(236, 72, 153, 0.08);
+          color: #831843;
         }
         
         .btn-sm {
@@ -669,27 +679,27 @@ const ContentCalendar = () => {
         .input-field {
           width: 100%;
           padding: 10px 12px;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: #FFFFFF;
+          border: 1px solid rgba(236, 72, 153, 0.25);
           border-radius: 8px;
-          color: #E2E8F0;
+          color: #374151;
           font-size: 13px;
           transition: all 0.2s ease;
         }
         
         .input-field:focus {
           outline: none;
-          border-color: #6366F1;
-          background: rgba(255,255,255,0.08);
+          border-color: #EC4899;
+          background: #FFFBFF;
         }
         
         .textarea-field {
           width: 100%;
           padding: 10px 12px;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: #FFFFFF;
+          border: 1px solid rgba(236, 72, 153, 0.25);
           border-radius: 8px;
-          color: #E2E8F0;
+          color: #374151;
           font-size: 13px;
           resize: vertical;
           min-height: 80px;
@@ -698,31 +708,31 @@ const ContentCalendar = () => {
         
         .textarea-field:focus {
           outline: none;
-          border-color: #6366F1;
+          border-color: #EC4899;
         }
         
         .select-field {
           width: 100%;
           padding: 10px 12px;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: #FFFFFF;
+          border: 1px solid rgba(236, 72, 153, 0.25);
           border-radius: 8px;
-          color: #E2E8F0;
+          color: #374151;
           font-size: 13px;
           cursor: pointer;
         }
         
         .select-field option {
-          background: #1a1a2e;
-          color: #E2E8F0;
+          background: #FFFFFF;
+          color: #374151;
         }
         
         .filter-select {
           padding: 8px 12px;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: #FFFFFF;
+          border: 1px solid rgba(236, 72, 153, 0.25);
           border-radius: 8px;
-          color: #E2E8F0;
+          color: #831843;
           font-size: 12px;
           cursor: pointer;
         }
@@ -733,7 +743,7 @@ const ContentCalendar = () => {
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(0,0,0,0.7);
+          background: rgba(236, 72, 153, 0.15);
           backdrop-filter: blur(4px);
           display: flex;
           align-items: center;
@@ -748,14 +758,14 @@ const ContentCalendar = () => {
         }
         
         .modal {
-          background: linear-gradient(135deg, #1e1e3f, #252550);
+          background: linear-gradient(135deg, #FFFFFF, #FDF2F8);
           border-radius: 16px;
           width: 95%;
           max-width: 700px;
           max-height: 90vh;
           overflow-y: auto;
-          border: 1px solid rgba(255,255,255,0.1);
-          box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+          border: 1px solid rgba(236, 72, 153, 0.2);
+          box-shadow: 0 20px 60px rgba(236, 72, 153, 0.2);
           animation: slideUp 0.3s ease;
         }
         
@@ -766,10 +776,10 @@ const ContentCalendar = () => {
         
         .modal-header {
           padding: 20px 24px;
-          border-bottom: 1px solid rgba(255,255,255,0.1);
+          border-bottom: 1px solid rgba(236, 72, 153, 0.2);
           position: sticky;
           top: 0;
-          background: linear-gradient(135deg, #1e1e3f, #252550);
+          background: linear-gradient(135deg, #FFFFFF, #FDF2F8);
           z-index: 10;
         }
         
@@ -779,20 +789,20 @@ const ContentCalendar = () => {
         
         .modal-footer {
           padding: 16px 24px;
-          border-top: 1px solid rgba(255,255,255,0.1);
+          border-top: 1px solid rgba(236, 72, 153, 0.2);
           display: flex;
           gap: 10px;
           justify-content: flex-end;
           position: sticky;
           bottom: 0;
-          background: linear-gradient(135deg, #1e1e3f, #252550);
+          background: linear-gradient(135deg, #FFFFFF, #FDF2F8);
         }
         
         .tab-btn {
           padding: 8px 16px;
           background: transparent;
           border: none;
-          color: #64748B;
+          color: #9D174D;
           font-size: 13px;
           font-weight: 600;
           cursor: pointer;
@@ -801,12 +811,12 @@ const ContentCalendar = () => {
         }
         
         .tab-btn.active {
-          color: #E2E8F0;
-          border-bottom-color: #6366F1;
+          color: #BE185D;
+          border-bottom-color: #EC4899;
         }
         
         .tab-btn:hover {
-          color: #E2E8F0;
+          color: #831843;
         }
         
         .team-btn {
@@ -823,14 +833,14 @@ const ContentCalendar = () => {
         }
         
         .team-btn.selected {
-          border-color: #6366F1;
+          border-color: #EC4899;
           transform: scale(1.1);
         }
         
         .platform-btn {
           padding: 8px 14px;
           border-radius: 8px;
-          border: 2px solid transparent;
+          border: 2px solid rgba(236, 72, 153, 0.3);
           cursor: pointer;
           transition: all 0.2s ease;
           font-weight: 600;
@@ -839,12 +849,13 @@ const ContentCalendar = () => {
         
         .platform-btn.selected {
           border-color: currentColor;
+          background: rgba(236, 72, 153, 0.12) !important;
         }
         
         .pillar-btn {
           padding: 6px 12px;
           border-radius: 6px;
-          border: 2px solid transparent;
+          border: 2px solid rgba(236, 72, 153, 0.3);
           cursor: pointer;
           transition: all 0.2s ease;
           font-size: 11px;
@@ -867,10 +878,11 @@ const ContentCalendar = () => {
         }
         
         .comment-bubble {
-          background: rgba(255,255,255,0.05);
+          background: rgba(236, 72, 153, 0.08);
           border-radius: 12px;
           padding: 12px;
           margin-bottom: 10px;
+          border: 1px solid rgba(236, 72, 153, 0.15);
         }
         
         .asset-link {
@@ -878,33 +890,35 @@ const ContentCalendar = () => {
           align-items: center;
           gap: 10px;
           padding: 10px 12px;
-          background: rgba(255,255,255,0.05);
+          background: rgba(236, 72, 153, 0.06);
           border-radius: 8px;
           margin-bottom: 8px;
+          border: 1px solid rgba(236, 72, 153, 0.12);
         }
         
         .hashtag {
           display: inline-block;
           padding: 4px 10px;
-          background: rgba(99, 102, 241, 0.2);
+          background: rgba(236, 72, 153, 0.15);
           border-radius: 20px;
           font-size: 11px;
-          color: #A5B4FC;
+          color: #9D174D;
           margin: 2px;
         }
         
         .view-toggle {
           display: flex;
-          background: rgba(255,255,255,0.05);
+          background: rgba(255,255,255,0.8);
           border-radius: 8px;
           padding: 4px;
+          border: 1px solid rgba(236, 72, 153, 0.2);
         }
         
         .view-toggle button {
           padding: 8px 16px;
           border: none;
           background: transparent;
-          color: #64748B;
+          color: #9D174D;
           font-size: 13px;
           font-weight: 600;
           cursor: pointer;
@@ -913,13 +927,13 @@ const ContentCalendar = () => {
         }
         
         .view-toggle button.active {
-          background: rgba(99, 102, 241, 0.3);
-          color: #E2E8F0;
+          background: rgba(236, 72, 153, 0.2);
+          color: #831843;
         }
         
         .template-card {
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
+          background: rgba(255,255,255,0.9);
+          border: 1px solid rgba(236, 72, 153, 0.2);
           border-radius: 12px;
           padding: 16px;
           cursor: pointer;
@@ -927,15 +941,16 @@ const ContentCalendar = () => {
         }
         
         .template-card:hover {
-          background: rgba(255,255,255,0.08);
+          background: #FDF2F8;
           transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(236, 72, 153, 0.15);
         }
       `}</style>
 
       {/* Demo Data Banner */}
       {!import.meta.env.VITE_SHEETS_API_URL && (
         <div style={{
-          background: 'linear-gradient(135deg, #F59E0B, #D97706)',
+          background: 'linear-gradient(135deg, #EC4899, #DB2777)',
           color: '#FFFFFF',
           padding: '16px 20px',
           borderRadius: '12px',
@@ -943,7 +958,7 @@ const ContentCalendar = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)',
+          boxShadow: '0 4px 12px rgba(236, 72, 153, 0.3)',
           border: '2px solid rgba(255, 255, 255, 0.2)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -967,16 +982,16 @@ const ContentCalendar = () => {
             fontSize: '28px',
             fontWeight: '700',
             margin: 0,
-            background: 'linear-gradient(135deg, #E2E8F0, #94A3B8)',
+            background: 'linear-gradient(135deg, #DB2777, #EC4899)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             fontFamily: "'Space Mono', monospace",
           }}>
             Content Calendar
           </h1>
-          <p style={{ margin: '4px 0 0', color: '#64748B', fontSize: '13px' }}>
+          <p style={{ margin: '4px 0 0', color: '#9D174D', fontSize: '13px' }}>
             Organic Content Team • Fountain
-            {syncing && <span style={{ marginLeft: '12px', color: '#6366F1' }}>🔄 Syncing...</span>}
+            {syncing && <span style={{ marginLeft: '12px', color: '#EC4899' }}>🔄 Syncing...</span>}
           </p>
         </div>
         
@@ -1017,7 +1032,7 @@ const ContentCalendar = () => {
         flexWrap: 'wrap',
         alignItems: 'center',
       }}>
-        <span style={{ fontSize: '12px', color: '#64748B', fontWeight: '600' }}>FILTERS:</span>
+        <span style={{ fontSize: '12px', color: '#9D174D', fontWeight: '600' }}>FILTERS:</span>
         <select 
           className="filter-select" 
           value={filters.assignee}
@@ -1099,7 +1114,7 @@ const ContentCalendar = () => {
             }}>
               <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: status.color }} />
               <span style={{ color: status.color, fontWeight: '600' }}>{status.label}</span>
-              <span style={{ marginLeft: 'auto', color: '#64748B', fontWeight: '700' }}>{count}</span>
+              <span style={{ marginLeft: 'auto', color: '#9D174D', fontWeight: '700' }}>{count}</span>
             </div>
           );
         })}
@@ -1123,10 +1138,10 @@ const ContentCalendar = () => {
 
       {/* Calendar Grid */}
       <div style={{
-        background: 'rgba(255,255,255,0.02)',
+        background: 'rgba(255,255,255,0.6)',
         borderRadius: '16px',
         padding: '16px',
-        border: '1px solid rgba(255,255,255,0.05)',
+        border: '1px solid rgba(236, 72, 153, 0.15)',
       }}>
         {viewMode === 'month' ? (
           <>
@@ -1136,7 +1151,7 @@ const ContentCalendar = () => {
                 <div key={day} style={{
                   textAlign: 'center',
                   padding: '8px',
-                  color: '#64748B',
+                  color: '#9D174D',
                   fontWeight: '600',
                   fontSize: '11px',
                   textTransform: 'uppercase',
@@ -1163,7 +1178,7 @@ const ContentCalendar = () => {
                   >
                     {day && (
                       <>
-                        <div style={{ fontSize: '12px', fontWeight: '600', color: '#94A3B8', marginBottom: '6px' }}>
+                        <div style={{ fontSize: '12px', fontWeight: '600', color: '#9D174D', marginBottom: '6px' }}>
                           {day}
                         </div>
                         {dayContents.slice(0, 3).map(content => (
@@ -1194,7 +1209,7 @@ const ContentCalendar = () => {
                     key={index}
                     className="calendar-day week-view"
                     style={{
-                      borderColor: isToday ? 'rgba(99, 102, 241, 0.4)' : undefined,
+                      borderColor: isToday ? 'rgba(236, 72, 153, 0.5)' : undefined,
                     }}
                     onDragOver={handleDragOver}
                     onDrop={(e) => handleDrop(e, dateKey)}
@@ -1204,7 +1219,7 @@ const ContentCalendar = () => {
                       textAlign: 'center',
                       marginBottom: '12px',
                       paddingBottom: '8px',
-                      borderBottom: '1px solid rgba(255,255,255,0.1)',
+                      borderBottom: '1px solid rgba(236, 72, 153, 0.15)',
                     }}>
                       <div style={{ fontSize: '11px', color: '#64748B', textTransform: 'uppercase', letterSpacing: '1px' }}>
                         {dayNames[date.getDay()].slice(0, 3)}
@@ -1212,7 +1227,7 @@ const ContentCalendar = () => {
                       <div style={{
                         fontSize: '20px',
                         fontWeight: '700',
-                        color: isToday ? '#6366F1' : '#E2E8F0',
+                        color: isToday ? '#EC4899' : '#374151',
                       }}>
                         {date.getDate()}
                       </div>
@@ -1250,10 +1265,10 @@ const ContentCalendar = () => {
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '700', fontFamily: "'Space Mono', monospace" }}>
+              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '700', fontFamily: "'Space Mono', monospace", color: '#831843' }}>
                 {editingContent ? 'Edit Content' : 'Add Content'}
               </h3>
-              <div style={{ display: 'flex', gap: '0', marginTop: '12px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+              <div style={{ display: 'flex', gap: '0', marginTop: '12px', borderBottom: '1px solid rgba(236, 72, 153, 0.2)' }}>
                 <button className={`tab-btn ${activeTab === 'details' ? 'active' : ''}`} onClick={() => setActiveTab('details')}>Details</button>
                 <button className={`tab-btn ${activeTab === 'content' ? 'active' : ''}`} onClick={() => setActiveTab('content')}>Content</button>
                 <button className={`tab-btn ${activeTab === 'assets' ? 'active' : ''}`} onClick={() => setActiveTab('assets')}>Assets</button>
@@ -1268,30 +1283,30 @@ const ContentCalendar = () => {
               {activeTab === 'details' && (
                 <>
                   <div style={{ marginBottom: '16px' }}>
-                    <label style={{ display: 'block', marginBottom: '6px', color: '#94A3B8', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Title</label>
+                    <label style={{ display: 'block', marginBottom: '6px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Title</label>
                     <input type="text" className="input-field" placeholder="Content title..." value={newContent.title} onChange={e => setNewContent({ ...newContent, title: e.target.value })} />
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '16px' }}>
                     <div>
-                      <label style={{ display: 'block', marginBottom: '6px', color: '#94A3B8', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Publish Date</label>
+                      <label style={{ display: 'block', marginBottom: '6px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Publish Date</label>
                       <input type="date" className="input-field" value={newContent.publishDate} onChange={e => setNewContent({ ...newContent, publishDate: e.target.value })} />
                     </div>
                     <div>
-                      <label style={{ display: 'block', marginBottom: '6px', color: '#94A3B8', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Time</label>
+                      <label style={{ display: 'block', marginBottom: '6px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Time</label>
                       <input type="time" className="input-field" value={newContent.publishTime} onChange={e => setNewContent({ ...newContent, publishTime: e.target.value })} />
                     </div>
                     <div>
-                      <label style={{ display: 'block', marginBottom: '6px', color: '#94A3B8', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Deadline</label>
+                      <label style={{ display: 'block', marginBottom: '6px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Deadline</label>
                       <input type="date" className="input-field" value={newContent.deadline} onChange={e => setNewContent({ ...newContent, deadline: e.target.value })} />
                     </div>
                   </div>
 
                   <div style={{ marginBottom: '16px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', color: '#94A3B8', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Platform</label>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Platform</label>
                     <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                       {Object.entries(platforms).map(([key, platform]) => (
-                        <button key={key} className={`platform-btn ${newContent.platform === key ? 'selected' : ''}`} style={{ background: newContent.platform === key ? platform.bg : 'rgba(255,255,255,0.05)', color: platform.color }} onClick={() => setNewContent({ ...newContent, platform: key })}>
+                        <button key={key} className={`platform-btn ${newContent.platform === key ? 'selected' : ''}`} style={{ background: newContent.platform === key ? platform.bg : 'rgba(236, 72, 153, 0.06)', color: platform.color }} onClick={() => setNewContent({ ...newContent, platform: key })}>
                           {platform.icon} {platform.name}
                         </button>
                       ))}
@@ -1299,10 +1314,10 @@ const ContentCalendar = () => {
                   </div>
 
                   <div style={{ marginBottom: '16px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', color: '#94A3B8', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Content Pillar</label>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Content Pillar</label>
                     <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                       {Object.entries(contentPillars).map(([key, pillar]) => (
-                        <button key={key} className={`pillar-btn ${newContent.pillar === key ? 'selected' : ''}`} style={{ background: newContent.pillar === key ? `${pillar.color}20` : 'rgba(255,255,255,0.05)', color: pillar.color }} onClick={() => setNewContent({ ...newContent, pillar: key })}>
+                        <button key={key} className={`pillar-btn ${newContent.pillar === key ? 'selected' : ''}`} style={{ background: newContent.pillar === key ? `${pillar.color}20` : 'rgba(236, 72, 153, 0.06)', color: pillar.color }} onClick={() => setNewContent({ ...newContent, pillar: key })}>
                           {pillar.icon} {pillar.name}
                         </button>
                       ))}
@@ -1310,7 +1325,7 @@ const ContentCalendar = () => {
                   </div>
 
                   <div style={{ marginBottom: '16px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', color: '#94A3B8', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Assign To</label>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Assign To</label>
                     <div style={{ display: 'flex', gap: '10px' }}>
                       {teamMembers.map(member => (
                         <button key={member.id} className={`team-btn ${newContent.assignee === member.id ? 'selected' : ''}`} style={{ background: member.color }} onClick={() => setNewContent({ ...newContent, assignee: member.id })} title={member.name}>
@@ -1322,7 +1337,7 @@ const ContentCalendar = () => {
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                     <div>
-                      <label style={{ display: 'block', marginBottom: '6px', color: '#94A3B8', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</label>
+                      <label style={{ display: 'block', marginBottom: '6px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Status</label>
                       <select className="select-field" value={newContent.status} onChange={e => setNewContent({ ...newContent, status: e.target.value })}>
                         {Object.entries(statuses).map(([key, status]) => (
                           <option key={key} value={key}>{status.label}</option>
@@ -1330,10 +1345,10 @@ const ContentCalendar = () => {
                       </select>
                     </div>
                     <div>
-                      <label style={{ display: 'block', marginBottom: '6px', color: '#94A3B8', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Content Type</label>
+                      <label style={{ display: 'block', marginBottom: '6px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Content Type</label>
                       <select className="select-field" value={newContent.type} onChange={e => setNewContent({ ...newContent, type: e.target.value })}>
-                        {contentTypes.map(type => (
-                          <option key={type} value={type}>{type}</option>
+                        {Object.entries(contentTypes).map(([key, type]) => (
+                          <option key={key} value={key}>{type.icon} {type.name}</option>
                         ))}
                       </select>
                     </div>
@@ -1351,13 +1366,13 @@ const ContentCalendar = () => {
               {activeTab === 'content' && (
                 <>
                   <div style={{ marginBottom: '16px' }}>
-                    <label style={{ display: 'block', marginBottom: '6px', color: '#94A3B8', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Caption / Script</label>
+                    <label style={{ display: 'block', marginBottom: '6px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Caption / Script</label>
                     <textarea className="textarea-field" placeholder="Write your caption or script..." value={newContent.caption} onChange={e => setNewContent({ ...newContent, caption: e.target.value })} style={{ minHeight: '150px' }} />
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', marginBottom: '8px', color: '#94A3B8', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Suggested Hashtags</label>
-                    <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '8px', padding: '12px' }}>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Suggested Hashtags</label>
+                    <div style={{ background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px', padding: '12px', border: '1px solid rgba(236, 72, 153, 0.12)' }}>
                       {getHashtags(newContent.platform, newContent.pillar).length > 0 ? (
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
                           {getHashtags(newContent.platform, newContent.pillar).map((tag, i) => (
@@ -1381,7 +1396,7 @@ const ContentCalendar = () => {
               {activeTab === 'assets' && (
                 <>
                   <div style={{ marginBottom: '16px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', color: '#94A3B8', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Asset Links</label>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Asset Links</label>
                     
                     {newContent.assetLinks && newContent.assetLinks.map((link, index) => (
                       <div key={index} className="asset-link">
@@ -1390,7 +1405,7 @@ const ContentCalendar = () => {
                         </span>
                         <div style={{ flex: 1 }}>
                           <div style={{ fontSize: '13px', fontWeight: '500' }}>{link.label}</div>
-                          <a href={link.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '11px', color: '#6366F1' }}>{link.url}</a>
+                          <a href={link.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '11px', color: '#DB2777' }}>{link.url}</a>
                         </div>
                         <button className="btn btn-ghost btn-sm" onClick={() => handleRemoveAssetLink(index)}>✕</button>
                       </div>
@@ -1458,9 +1473,9 @@ const ContentCalendar = () => {
               {activeTab === 'approval' && (
                 <>
                   <div style={{ marginBottom: '20px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', color: '#94A3B8', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Reviewer</label>
+                    <label style={{ display: 'block', marginBottom: '8px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Reviewer</label>
                     <div style={{ display: 'flex', gap: '10px' }}>
-                      <button className={`team-btn ${newContent.reviewer === null ? 'selected' : ''}`} style={{ background: 'rgba(255,255,255,0.1)', fontSize: '14px' }} onClick={() => setNewContent({ ...newContent, reviewer: null })} title="None">—</button>
+                      <button className={`team-btn ${newContent.reviewer === null ? 'selected' : ''}`} style={{ background: 'rgba(236, 72, 153, 0.1)', fontSize: '14px' }} onClick={() => setNewContent({ ...newContent, reviewer: null })} title="None">—</button>
                       {teamMembers.map(member => (
                         <button key={member.id} className={`team-btn ${newContent.reviewer === member.id ? 'selected' : ''}`} style={{ background: member.color }} onClick={() => setNewContent({ ...newContent, reviewer: member.id })} title={member.name}>
                           {member.avatar}
@@ -1469,7 +1484,7 @@ const ContentCalendar = () => {
                     </div>
                   </div>
 
-                  <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '12px', padding: '20px' }}>
+                  <div style={{ background: 'rgba(236, 72, 153, 0.06)', borderRadius: '12px', padding: '20px', border: '1px solid rgba(236, 72, 153, 0.12)' }}>
                     <h4 style={{ margin: '0 0 12px', fontSize: '14px', fontWeight: '600' }}>Approval Status</h4>
                     
                     {newContent.approvedBy ? (
@@ -1519,7 +1534,7 @@ const ContentCalendar = () => {
         <div className="modal-overlay" onClick={() => setShowTemplateModal(false)}>
           <div className="modal" style={{ maxWidth: '500px' }} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '700', fontFamily: "'Space Mono', monospace" }}>
+              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '700', fontFamily: "'Space Mono', monospace", color: '#831843' }}>
                 📋 Recurring Templates
               </h3>
               <p style={{ margin: '8px 0 0', fontSize: '13px', color: '#64748B' }}>
