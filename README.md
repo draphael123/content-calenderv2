@@ -10,6 +10,10 @@ A React-based content calendar application for managing social media content wit
 - 🔄 Real-time sync with Google Sheets (60s polling)
 - ✨ Optimistic updates for snappy UX
 - 📊 Status tracking and filtering
+- 🔍 **Search** - Find content by title, caption, platform, type, or pillar
+- ✅ **Bulk Operations** - Multi-select, batch status changes, reassign, delete
+- 📋 **Duplicate Content** - Clone existing posts with one click
+- 🌙 **Dark Mode** - Toggle between light and dark themes
 - 💬 Comments and approval workflow
 - 📋 Recurring content templates
 - 📥 Export to CSV (download calendar data)

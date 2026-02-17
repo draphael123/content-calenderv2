@@ -31,6 +31,12 @@ const ContentCalendar = () => {
     pillar: 'all',
     type: 'all',
   });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedContentIds, setSelectedContentIds] = useState([]);
+  const [showBulkActions, setShowBulkActions] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem('contentCalendarDarkMode') === 'true';
+  });
 
   // API State
   const [teamMembers, setTeamMembers] = useState([]);
@@ -189,17 +195,33 @@ const ContentCalendar = () => {
     setShowUserSelector(false);
   };
 
-  // Filtered contents
+  // Filtered contents with search
   const filteredContents = useMemo(() => {
     return contents.filter(c => {
+      // Filter by filters
       if (filters.assignee !== 'all' && c.assignee !== parseInt(filters.assignee)) return false;
       if (filters.platform !== 'all' && c.platform !== filters.platform) return false;
       if (filters.status !== 'all' && c.status !== filters.status) return false;
       if (filters.pillar !== 'all' && c.pillar !== filters.pillar) return false;
       if (filters.type !== 'all' && c.type !== filters.type) return false;
+      
+      // Filter by search query
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        const matchesTitle = c.title?.toLowerCase().includes(query);
+        const matchesCaption = c.caption?.toLowerCase().includes(query);
+        const matchesPlatform = c.platform?.toLowerCase().includes(query);
+        const matchesType = c.type?.toLowerCase().includes(query);
+        const matchesPillar = c.pillar?.toLowerCase().includes(query);
+        
+        if (!matchesTitle && !matchesCaption && !matchesPlatform && !matchesType && !matchesPillar) {
+          return false;
+        }
+      }
+      
       return true;
     });
-  }, [contents, filters]);
+  }, [contents, filters, searchQuery]);
 
   const getDaysInMonth = (date) => {
     const year = date.getFullYear();
@@ -494,6 +516,137 @@ const ContentCalendar = () => {
     setShowSuggestionModal(false);
   };
 
+  const toggleDarkMode = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    localStorage.setItem('contentCalendarDarkMode', newMode.toString());
+  };
+
+  const handleDuplicateContent = (content) => {
+    const duplicatedContent = {
+      ...content,
+      id: Date.now(),
+      title: `${content.title} (Copy)`,
+      status: 'draft',
+      publishDate: '', // Clear date so user sets new one
+      publishTime: content.publishTime || '10:00',
+      approvedBy: null,
+      approvedAt: null,
+      comments: [], // Clear comments for new copy
+    };
+    
+    setNewContent(duplicatedContent);
+    setEditingContent(null);
+    setSelectedDate(null);
+    setActiveTab('details');
+    setShowModal(true);
+  };
+
+  const handleBulkStatusChange = async (newStatus) => {
+    if (selectedContentIds.length === 0) return;
+    
+    const originalContents = contents;
+    const updatedContents = contents.map(c => 
+      selectedContentIds.includes(c.id) ? { ...c, status: newStatus } : c
+    );
+    
+    // Optimistic update
+    setContents(updatedContents);
+    setSelectedContentIds([]);
+    setShowBulkActions(false);
+    
+    // Sync to API
+    try {
+      setSyncing(true);
+      for (const id of selectedContentIds) {
+        const content = updatedContents.find(c => c.id === id);
+        if (content) {
+          await sheetsApi.update(content);
+        }
+      }
+    } catch (err) {
+      setContents(originalContents);
+      setError('Failed to update content. Please try again.');
+      console.error('Error bulk updating:', err);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedContentIds.length === 0) return;
+    if (!confirm(`Delete ${selectedContentIds.length} items?`)) return;
+    
+    const originalContents = contents;
+    const updatedContents = contents.filter(c => !selectedContentIds.includes(c.id));
+    
+    // Optimistic update
+    setContents(updatedContents);
+    setSelectedContentIds([]);
+    setShowBulkActions(false);
+    
+    // Sync to API
+    try {
+      setSyncing(true);
+      for (const id of selectedContentIds) {
+        await sheetsApi.delete(id);
+      }
+    } catch (err) {
+      setContents(originalContents);
+      setError('Failed to delete content. Please try again.');
+      console.error('Error bulk deleting:', err);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
+  const handleBulkReassign = async (newAssignee) => {
+    if (selectedContentIds.length === 0) return;
+    
+    const originalContents = contents;
+    const updatedContents = contents.map(c => 
+      selectedContentIds.includes(c.id) ? { ...c, assignee: newAssignee } : c
+    );
+    
+    // Optimistic update
+    setContents(updatedContents);
+    setSelectedContentIds([]);
+    setShowBulkActions(false);
+    
+    // Sync to API
+    try {
+      setSyncing(true);
+      for (const id of selectedContentIds) {
+        const content = updatedContents.find(c => c.id === id);
+        if (content) {
+          await sheetsApi.update(content);
+        }
+      }
+    } catch (err) {
+      setContents(originalContents);
+      setError('Failed to reassign content. Please try again.');
+      console.error('Error bulk reassigning:', err);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
+  const toggleContentSelection = (id) => {
+    setSelectedContentIds(prev => 
+      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
+    );
+  };
+
+  const selectAllVisibleContent = () => {
+    const visibleIds = filteredContents.map(c => c.id);
+    setSelectedContentIds(visibleIds);
+  };
+
+  const clearSelection = () => {
+    setSelectedContentIds([]);
+    setShowBulkActions(false);
+  };
+
   const handleDownloadCSV = () => {
     // Prepare Content CSV
     const contentHeaders = ['id', 'title', 'platform', 'assignee', 'status', 'type', 'pillar', 'publishDate', 'publishTime', 'deadline', 'caption', 'assetLinks', 'comments', 'reviewer', 'approvedBy', 'approvedAt', 'reminderSet'];
@@ -586,10 +739,11 @@ const ContentCalendar = () => {
     const status = statuses[content.status];
     const pillar = contentPillars[content.pillar];
     const overdue = isOverdue(content);
+    const isSelected = selectedContentIds.includes(content.id);
 
     return (
       <div
-        className={`content-card ${overdue ? 'overdue' : ''}`}
+        className={`content-card ${overdue ? 'overdue' : ''} ${isSelected ? 'selected' : ''}`}
         style={{ borderLeftColor: platform.color }}
         draggable
         onDragStart={(e) => handleDragStart(e, content)}
@@ -600,6 +754,16 @@ const ContentCalendar = () => {
       >
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <input
+              type="checkbox"
+              checked={isSelected}
+              onChange={(e) => {
+                e.stopPropagation();
+                toggleContentSelection(content.id);
+              }}
+              onClick={(e) => e.stopPropagation()}
+              style={{ width: '14px', height: '14px', cursor: 'pointer' }}
+            />
             <span style={{ fontSize: '14px', color: platform.color }}>{platform.icon}</span>
             <span style={{ fontSize: '10px' }}>{pillar?.icon}</span>
           </div>
@@ -684,17 +848,94 @@ const ContentCalendar = () => {
   }
 
   return (
-    <div style={{
+    <div className={darkMode ? 'dark-mode' : ''} style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #FFF5F7 0%, #FCE7F3 50%, #FDF2F8 100%)',
+      background: darkMode ? 'linear-gradient(135deg, #1a1a2e 0%, #0f1419 50%, #1a1a2e 100%)' : 'linear-gradient(135deg, #FFF5F7 0%, #FCE7F3 50%, #FDF2F8 100%)',
       fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif",
       padding: '20px',
-      color: '#4B5563',
+      color: darkMode ? '#E5E7EB' : '#4B5563',
+      transition: 'background 0.3s ease, color 0.3s ease',
     }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
         
         * { box-sizing: border-box; }
+        
+        /* Dark Mode Styles */
+        .dark-mode .calendar-day {
+          background: rgba(30, 30, 46, 0.8) !important;
+          border-color: rgba(236, 72, 153, 0.3) !important;
+          color: #E5E7EB !important;
+        }
+        
+        .dark-mode .calendar-day:hover {
+          background: rgba(40, 40, 60, 0.95) !important;
+        }
+        
+        .dark-mode .content-card {
+          background: #2a2a3e !important;
+          color: #E5E7EB !important;
+          border-left: 3px solid;
+        }
+        
+        .dark-mode .content-card:hover {
+          background: #34344e !important;
+        }
+        
+        .dark-mode .content-card.selected {
+          background: rgba(236, 72, 153, 0.2) !important;
+          border: 2px solid #EC4899 !important;
+        }
+        
+        .dark-mode .input-field,
+        .dark-mode .textarea-field,
+        .dark-mode .select-field,
+        .dark-mode .filter-select {
+          background: #2a2a3e !important;
+          border-color: rgba(236, 72, 153, 0.3) !important;
+          color: #E5E7EB !important;
+        }
+        
+        .dark-mode .modal {
+          background: linear-gradient(135deg, #2a2a3e, #1e1e2e) !important;
+          color: #E5E7EB !important;
+        }
+        
+        .dark-mode .modal-header,
+        .dark-mode .modal-footer {
+          background: linear-gradient(135deg, #2a2a3e, #1e1e2e) !important;
+          border-color: rgba(236, 72, 153, 0.3) !important;
+        }
+        
+        .dark-mode .comment-bubble,
+        .dark-mode .asset-link {
+          background: rgba(236, 72, 153, 0.1) !important;
+          border-color: rgba(236, 72, 153, 0.2) !important;
+        }
+        
+        .dark-mode .template-card {
+          background: rgba(42, 42, 62, 0.9) !important;
+          border-color: rgba(236, 72, 153, 0.3) !important;
+          color: #E5E7EB !important;
+        }
+        
+        .dark-mode .template-card:hover {
+          background: rgba(52, 52, 78, 0.95) !important;
+        }
+        
+        .dark-mode .view-toggle {
+          background: rgba(42, 42, 62, 0.8) !important;
+          border-color: rgba(236, 72, 153, 0.3) !important;
+        }
+        
+        .dark-mode .btn-ghost {
+          color: #EC4899 !important;
+          border-color: rgba(236, 72, 153, 0.4) !important;
+        }
+        
+        .dark-mode .btn-ghost:hover {
+          background: rgba(236, 72, 153, 0.15) !important;
+        }
         
         .calendar-day {
           background: rgba(255,255,255,0.8);
@@ -737,6 +978,12 @@ const ContentCalendar = () => {
         
         .content-card.overdue {
           background: #FEE2E2;
+        }
+        
+        .content-card.selected {
+          background: rgba(236, 72, 153, 0.1);
+          border: 2px solid #EC4899 !important;
+          box-shadow: 0 2px 12px rgba(236, 72, 153, 0.3);
         }
         
         .btn {
@@ -1130,12 +1377,92 @@ const ContentCalendar = () => {
           <button className="btn btn-ghost btn-sm" onClick={() => setShowHelpModal(true)}>
             ❓ How It Works
           </button>
+          <button 
+            className="btn btn-ghost btn-sm" 
+            onClick={toggleDarkMode}
+            title="Toggle Dark Mode"
+          >
+            {darkMode ? '☀️' : '🌙'}
+          </button>
           <div className="view-toggle">
             <button className={viewMode === 'month' ? 'active' : ''} onClick={() => setViewMode('month')}>Month</button>
             <button className={viewMode === 'week' ? 'active' : ''} onClick={() => setViewMode('week')}>Week</button>
           </div>
         </div>
       </div>
+
+      {/* Search Bar */}
+      <div style={{ marginBottom: '16px' }}>
+        <input
+          type="text"
+          className="input-field"
+          placeholder="🔍 Search by title, caption, platform, type, or pillar..."
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          style={{ maxWidth: '500px' }}
+        />
+        {searchQuery && (
+          <button 
+            className="btn btn-ghost btn-sm" 
+            onClick={() => setSearchQuery('')}
+            style={{ marginLeft: '8px' }}
+          >
+            Clear Search
+          </button>
+        )}
+      </div>
+
+      {/* Bulk Actions Bar */}
+      {selectedContentIds.length > 0 && (
+        <div style={{
+          background: 'rgba(236, 72, 153, 0.1)',
+          border: '2px solid rgba(236, 72, 153, 0.3)',
+          borderRadius: '12px',
+          padding: '12px 16px',
+          marginBottom: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px',
+          flexWrap: 'wrap',
+        }}>
+          <span style={{ fontWeight: '600', color: '#831843' }}>
+            {selectedContentIds.length} selected
+          </span>
+          <button className="btn btn-sm" style={{ background: '#10B981', color: 'white' }} onClick={() => handleBulkStatusChange('approved')}>
+            ✓ Approve
+          </button>
+          <button className="btn btn-sm" style={{ background: '#F59E0B', color: 'white' }} onClick={() => handleBulkStatusChange('review')}>
+            ⏳ Set to Review
+          </button>
+          <button className="btn btn-sm" style={{ background: '#6366F1', color: 'white' }} onClick={() => handleBulkStatusChange('scheduled')}>
+            📅 Schedule
+          </button>
+          <select 
+            className="filter-select"
+            onChange={e => {
+              if (e.target.value) {
+                handleBulkReassign(parseInt(e.target.value));
+              }
+            }}
+            value=""
+            style={{ minWidth: '150px' }}
+          >
+            <option value="">Reassign to...</option>
+            {teamMembers.map(m => (
+              <option key={m.id} value={m.id}>{m.avatar} {m.name}</option>
+            ))}
+          </select>
+          <button className="btn btn-sm" style={{ background: '#EF4444', color: 'white' }} onClick={handleBulkDelete}>
+            🗑️ Delete
+          </button>
+          <button className="btn btn-ghost btn-sm" onClick={clearSelection} style={{ marginLeft: 'auto' }}>
+            Clear
+          </button>
+          <button className="btn btn-ghost btn-sm" onClick={selectAllVisibleContent}>
+            Select All ({filteredContents.length})
+          </button>
+        </div>
+      )}
 
       {/* Filters */}
       <div style={{
@@ -1629,9 +1956,14 @@ const ContentCalendar = () => {
 
             <div className="modal-footer">
               {editingContent && (
-                <button className="btn" style={{ background: '#EF4444', color: 'white', marginRight: 'auto' }} onClick={() => handleDeleteContent(editingContent.id)}>
-                  Delete
-                </button>
+                <>
+                  <button className="btn" style={{ background: '#EF4444', color: 'white' }} onClick={() => handleDeleteContent(editingContent.id)}>
+                    🗑️ Delete
+                  </button>
+                  <button className="btn" style={{ background: '#6366F1', color: 'white', marginRight: 'auto' }} onClick={() => { handleDuplicateContent(editingContent); }}>
+                    📋 Duplicate
+                  </button>
+                </>
               )}
               <button className="btn btn-ghost" onClick={() => setShowModal(false)}>Cancel</button>
               <button className="btn btn-primary" onClick={handleAddContent}>

@@ -64,10 +64,29 @@ Located at the top, contains:
 - **📥 Download Button** - Export calendar data as CSV files
 - **💡 Suggestions Button** - Opens feedback/suggestion form
 - **❓ How It Works Button** - Opens interactive help guide
+- **🌙/☀️ Dark Mode Toggle** - Switch between light and dark themes
 - **View Toggle** - Switch between Month/Week view
   ```
   [Month] [Week]
   ```
+
+### 🔍 Search Bar
+Located below the header:
+- Search across all content fields
+- Finds matches in title, caption, platform, type, and pillar
+- Real-time filtering as you type
+- Clear button to reset search
+- Works alongside other filters
+
+**How to Use:**
+1. Type in the search box
+2. Results filter instantly
+3. Click "Clear Search" to reset
+
+**Examples:**
+- Search "TikTok" → Shows all TikTok content
+- Search "weight loss" → Shows weight loss pillar content
+- Search "testimonial" → Shows all testimonial types
 
 ### Stats Dashboard
 Displays content count by status with color-coded indicators:
@@ -477,6 +496,184 @@ Suggested: #testosteronetherapy #menshealth #hormoneoptimization
 - ✅ Instant UI update
 - 🔄 Syncs to Google Sheets
 - Closes modal on success
+
+---
+
+## 🔍 Search & Find Content
+
+### Search Bar
+
+Located directly below the header, the search bar helps you quickly find specific content.
+
+**Search Across:**
+- Title
+- Caption text
+- Platform (TikTok, Instagram, YouTube)
+- Content Type (Educational, Testimonial, etc.)
+- Content Pillar (Weight Loss, TRT, HRT, etc.)
+
+**Features:**
+- ⚡ Real-time filtering as you type
+- 🔄 Works alongside regular filters
+- ❌ Clear button to reset
+- 📊 Shows count of filtered results
+
+**Pro Tips:**
+- Search "testimonial" to find all patient stories
+- Search "TikTok" to see platform-specific content
+- Search keywords from captions to find specific posts
+- Combine search with filters for precise results
+
+---
+
+## ✅ Bulk Operations
+
+### Multi-Select & Batch Actions
+
+Manage multiple content pieces at once with bulk operations.
+
+**How to Use:**
+
+1. **Select Content:**
+   - Click checkboxes on content cards
+   - Or click "Select All" to select all visible content
+
+2. **Bulk Actions Bar Appears:**
+   Once items are selected, a blue action bar appears showing:
+   - Number of items selected
+   - Quick action buttons
+   - Clear selection button
+
+**Available Bulk Actions:**
+
+### ✓ Approve All
+Batch approve multiple content pieces
+- Changes status to "Approved"
+- Useful for reviewing week's content at once
+
+### ⏳ Set to Review
+Move multiple items to review status
+- Changes status to "In Review"
+- Ready for team review
+
+### 📅 Schedule All
+Batch schedule content
+- Changes status to "Scheduled"
+- Good for final scheduling step
+
+### 👥 Reassign
+Change assignee for multiple items
+- Select new team member from dropdown
+- Instantly reassigns all selected content
+- Great for workload balancing
+
+### 🗑️ Delete
+Remove multiple items at once
+- **Warning:** Asks for confirmation
+- Permanently deletes selected content
+- Use carefully!
+
+**Use Cases:**
+- ✅ Approve entire week's content after review
+- 📊 Reassign 10+ posts when team member changes
+- 🗑️ Clean up old draft content
+- 📅 Batch schedule approved content
+
+**Tips:**
+- Use filters first to narrow selection
+- "Select All" only selects visible/filtered content
+- Can deselect individual items by unchecking
+- Bulk operations sync to Google Sheets
+
+---
+
+## 📋 Duplicate Content
+
+### Clone Existing Posts
+
+Quickly create copies of existing content with one click.
+
+**How to Use:**
+
+1. Click any content card to open editor
+2. Click **📋 Duplicate** button (bottom left)
+3. Modal opens with duplicated content:
+   - Title has " (Copy)" appended
+   - Status reset to "Draft"
+   - Publish date cleared (so you set new one)
+   - Comments cleared (fresh start)
+   - All other fields copied (caption, platform, type, etc.)
+4. Edit as needed
+5. Set new publish date
+6. Save
+
+**Perfect For:**
+
+- 🔄 **Recurring Posts** - Duplicate last month's post
+- 🎨 **Variations** - Create similar content for different platforms
+- 📝 **Templates** - Duplicate well-performing posts
+- ⏰ **Time-Saving** - Skip retyping captions/hashtags
+- 🔁 **Series** - Create content series quickly
+
+**What Gets Duplicated:**
+- ✅ Title (with " (Copy)")
+- ✅ Caption & hashtags
+- ✅ Platform, Type, Pillar
+- ✅ Asset links
+- ✅ Assignee
+- ✅ Reviewer
+- ✅ Publish time
+
+**What Gets Reset:**
+- 🔄 Status → Draft
+- 🔄 Publish date → Blank
+- 🔄 Comments → Cleared
+- 🔄 Approval info → Cleared
+
+**Example Workflow:**
+1. Find successful post from last month
+2. Click card → Click "Duplicate"
+3. Update title and caption slightly
+4. Set new publish date (next month)
+5. Save → New content created!
+
+---
+
+## 🌙 Dark Mode
+
+### Toggle Light/Dark Theme
+
+Switch between light and dark color schemes for comfortable viewing.
+
+**How to Activate:**
+
+Click the **🌙 moon icon** (light mode) or **☀️ sun icon** (dark mode) in the header.
+
+**Dark Mode Features:**
+
+- 🎨 **Dark Backgrounds** - Easy on the eyes
+- 💡 **High Contrast** - Content cards stand out
+- 🌈 **Preserved Colors** - Platform and status colors remain vibrant
+- 💾 **Saved Preference** - Choice persists between sessions
+- ⚡ **Smooth Transition** - Animated theme switch
+
+**When to Use Dark Mode:**
+- 🌙 Working late at night
+- 💻 Extended screen time
+- 👀 Reduce eye strain
+- 🎭 Personal preference
+- 📱 Match system theme
+
+**What Changes in Dark Mode:**
+- Background: Light pink gradient → Dark blue/grey gradient
+- Calendar days: White → Dark grey
+- Content cards: White → Dark with pink borders
+- Text: Dark grey → Light grey
+- Modals: Light → Dark themed
+- All inputs and buttons adapt
+
+**Persistence:**
+Your theme choice is saved in browser localStorage and will be remembered next time you visit!
 
 ---
 
@@ -922,6 +1119,10 @@ Located at bottom of calendar, shows all available options:
 ## 🚀 What's Next?
 
 ### Recently Added Features ✅
+- 🔍 **Search** - Find content instantly by title, caption, platform, type, or pillar
+- ✅ **Bulk Operations** - Multi-select and batch update status, reassign, or delete
+- 📋 **Duplicate Content** - Clone existing posts with one click
+- 🌙 **Dark Mode** - Toggle between light and dark themes (persists in localStorage)
 - 📥 Download spreadsheet data as CSV files
 - 💡 Suggestion form (sends to daniel@fountain.net)
 - ❓ Interactive "How It Works" guide built into the website
