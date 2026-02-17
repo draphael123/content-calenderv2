@@ -1,0 +1,5 @@
+id,title,platform,assignee,status,type,pillar,publishDate,publishTime,deadline,caption,assetLinks,comments,reviewer,approvedBy,approvedAt,reminderSet
+1,Sample: GLP-1 Weight Loss Tips,tiktok,1,approved,Educational,weightloss,2025-02-15,10:00,2025-02-13,"5 tips to maximize your GLP-1 results! 💪 #glp1 #weightloss","[{""type"":""canva"",""url"":""https://canva.com/design/example"",""label"":""Video Edit""}]","[{""id"":1,""author"":3,""text"":""Great hook!"",""timestamp"":""2025-02-10T10:30:00""}]",3,3,2025-02-14T09:00:00,true
+2,Sample: Patient Success Story,instagram,2,review,Testimonial,testimonials,2025-02-18,12:00,2025-02-16,"Amazing transformation story! Swipe to see the journey 🎉","[{""type"":""drive"",""url"":""https://drive.google.com/file/example"",""label"":""Photos""}]","[{""id"":1,""author"":1,""text"":""Did we get consent?"",""timestamp"":""2025-02-15T11:00:00""}]",1,,,false
+3,Sample: TRT Q&A with Dr. Smith,youtube,3,draft,Q&A,trt,2025-02-20,14:00,2025-02-18,Dr. Smith answers your TRT questions! Timestamps in description.,[],[],,,,,false
+

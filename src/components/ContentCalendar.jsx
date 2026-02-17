@@ -9,10 +9,19 @@ const ContentCalendar = () => {
   const [draggedItem, setDraggedItem] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
+  const [showSuggestionModal, setShowSuggestionModal] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
+  const [helpTab, setHelpTab] = useState('overview');
   const [selectedDate, setSelectedDate] = useState(null);
   const [editingContent, setEditingContent] = useState(null);
   const [activeTab, setActiveTab] = useState('details');
   const [newComment, setNewComment] = useState('');
+  const [suggestion, setSuggestion] = useState({
+    name: '',
+    email: '',
+    type: 'feature',
+    message: '',
+  });
   
   // Filters
   const [filters, setFilters] = useState({
@@ -456,6 +465,22 @@ const ContentCalendar = () => {
     } finally {
       setSyncing(false);
     }
+  };
+
+  const handleSubmitSuggestion = () => {
+    const currentUserData = getAssignee(currentUser);
+    const userName = suggestion.name || currentUserData?.name || 'Anonymous';
+    const userEmail = suggestion.email || '';
+    
+    const subject = `Content Calendar Suggestion: ${suggestion.type === 'feature' ? 'Feature Request' : suggestion.type === 'bug' ? 'Bug Report' : 'Feedback'}`;
+    const body = `From: ${userName}${userEmail ? ` (${userEmail})` : ''}\nType: ${suggestion.type}\n\nMessage:\n${suggestion.message}`;
+    
+    // Open mailto link
+    window.location.href = `mailto:daniel@fountain.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    // Reset form and close modal
+    setSuggestion({ name: '', email: '', type: 'feature', message: '' });
+    setShowSuggestionModal(false);
   };
 
   const getAssignee = (id) => teamMembers.find(t => t.id === id);
@@ -1017,6 +1042,12 @@ const ContentCalendar = () => {
           <button className="btn btn-ghost btn-sm" onClick={() => setShowTemplateModal(true)}>
             📋 Templates
           </button>
+          <button className="btn btn-ghost btn-sm" onClick={() => setShowSuggestionModal(true)}>
+            💡 Suggestions
+          </button>
+          <button className="btn btn-ghost btn-sm" onClick={() => setShowHelpModal(true)}>
+            ❓ How It Works
+          </button>
           <div className="view-toggle">
             <button className={viewMode === 'month' ? 'active' : ''} onClick={() => setViewMode('month')}>Month</button>
             <button className={viewMode === 'week' ? 'active' : ''} onClick={() => setViewMode('week')}>Week</button>
@@ -1565,6 +1596,395 @@ const ContentCalendar = () => {
             </div>
             <div className="modal-footer">
               <button className="btn btn-ghost" onClick={() => setShowTemplateModal(false)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Help Modal */}
+      {showHelpModal && (
+        <div className="modal-overlay" onClick={() => setShowHelpModal(false)}>
+          <div className="modal" style={{ maxWidth: '700px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '700', fontFamily: "'Space Mono', monospace", color: '#831843' }}>
+                ❓ How the Content Calendar Works
+              </h3>
+              <p style={{ margin: '8px 0 0', fontSize: '13px', color: '#64748B' }}>
+                Quick guide to using the calendar
+              </p>
+              <div style={{ display: 'flex', gap: '0', marginTop: '12px', borderBottom: '1px solid rgba(236, 72, 153, 0.2)' }}>
+                <button className={`tab-btn ${helpTab === 'overview' ? 'active' : ''}`} onClick={() => setHelpTab('overview')}>Overview</button>
+                <button className={`tab-btn ${helpTab === 'creating' ? 'active' : ''}`} onClick={() => setHelpTab('creating')}>Creating Content</button>
+                <button className={`tab-btn ${helpTab === 'features' ? 'active' : ''}`} onClick={() => setHelpTab('features')}>Features</button>
+                <button className={`tab-btn ${helpTab === 'tips' ? 'active' : ''}`} onClick={() => setHelpTab('tips')}>Tips</button>
+              </div>
+            </div>
+            <div className="modal-body" style={{ maxHeight: '60vh', overflowY: 'auto' }}>
+              {helpTab === 'overview' && (
+                <>
+                  <h4 style={{ margin: '0 0 12px', fontSize: '15px', fontWeight: '600', color: '#831843' }}>🎯 What is This?</h4>
+                  <p style={{ margin: '0 0 16px', fontSize: '13px', lineHeight: '1.6', color: '#4B5563' }}>
+                    The Content Calendar helps you plan, schedule, and manage social media content across TikTok, Instagram, and YouTube. 
+                    All content syncs with Google Sheets in real-time.
+                  </p>
+
+                  <h4 style={{ margin: '16px 0 12px', fontSize: '15px', fontWeight: '600', color: '#831843' }}>📊 Key Sections</h4>
+                  <div style={{ display: 'grid', gap: '10px' }}>
+                    <div style={{ padding: '10px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px', border: '1px solid rgba(236, 72, 153, 0.12)' }}>
+                      <div style={{ fontWeight: '600', fontSize: '13px', marginBottom: '4px' }}>📅 Calendar Views</div>
+                      <div style={{ fontSize: '12px', color: '#64748B' }}>Switch between Month and Week views to see your content schedule</div>
+                    </div>
+                    <div style={{ padding: '10px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px', border: '1px solid rgba(236, 72, 153, 0.12)' }}>
+                      <div style={{ fontWeight: '600', fontSize: '13px', marginBottom: '4px' }}>🔍 Filters</div>
+                      <div style={{ fontSize: '12px', color: '#64748B' }}>Filter by team member, platform, status, pillar, or content type</div>
+                    </div>
+                    <div style={{ padding: '10px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px', border: '1px solid rgba(236, 72, 153, 0.12)' }}>
+                      <div style={{ fontWeight: '600', fontSize: '13px', marginBottom: '4px' }}>📊 Status Tracker</div>
+                      <div style={{ fontSize: '12px', color: '#64748B' }}>See how many items are in Draft, Review, Approved, Scheduled, and Published</div>
+                    </div>
+                    <div style={{ padding: '10px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px', border: '1px solid rgba(236, 72, 153, 0.12)' }}>
+                      <div style={{ fontWeight: '600', fontSize: '13px', marginBottom: '4px' }}>🎴 Content Cards</div>
+                      <div style={{ fontSize: '12px', color: '#64748B' }}>Each card shows platform, pillar, assignee, status, time, and more</div>
+                    </div>
+                  </div>
+
+                  <h4 style={{ margin: '16px 0 12px', fontSize: '15px', fontWeight: '600', color: '#831843' }}>🎨 Understanding Content Cards</h4>
+                  <div style={{ padding: '12px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px', border: '1px solid rgba(236, 72, 153, 0.12)' }}>
+                    <div style={{ fontSize: '12px', lineHeight: '1.8', color: '#4B5563' }}>
+                      <div><strong>♪ ◎ ▶</strong> = Platform icons (TikTok, Instagram, YouTube)</div>
+                      <div><strong>⚖️ 💪 ✨ 🌿 💬</strong> = Content pillars (Weight Loss, TRT, HRT, Lifestyle, Testimonials)</div>
+                      <div><strong>Colored pill</strong> = Status (Draft, Review, Approved, etc.)</div>
+                      <div><strong>🕐 Time</strong> = Publish time</div>
+                      <div><strong>💬 Number</strong> = Comment count</div>
+                      <div><strong>🔔</strong> = Reminder set</div>
+                      <div><strong>⚠ Overdue</strong> = Deadline passed</div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {helpTab === 'creating' && (
+                <>
+                  <h4 style={{ margin: '0 0 12px', fontSize: '15px', fontWeight: '600', color: '#831843' }}>➕ Creating New Content</h4>
+                  <div style={{ marginBottom: '16px' }}>
+                    <div style={{ padding: '10px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.2)', marginBottom: '8px' }}>
+                      <div style={{ fontWeight: '600', fontSize: '13px', marginBottom: '4px', color: '#059669' }}>Method 1: Click Any Day</div>
+                      <div style={{ fontSize: '12px', color: '#64748B' }}>Click an empty space on any calendar day to create content for that date</div>
+                    </div>
+                    <div style={{ padding: '10px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.2)', marginBottom: '8px' }}>
+                      <div style={{ fontWeight: '600', fontSize: '13px', marginBottom: '4px', color: '#059669' }}>Method 2: Use Templates</div>
+                      <div style={{ fontSize: '12px', color: '#64748B' }}>Click 📋 Templates button to quick-create recurring content like "Transformation Tuesday"</div>
+                    </div>
+                  </div>
+
+                  <h4 style={{ margin: '16px 0 12px', fontSize: '15px', fontWeight: '600', color: '#831843' }}>📝 Content Form Tabs</h4>
+                  <div style={{ display: 'grid', gap: '10px' }}>
+                    <div style={{ padding: '10px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px' }}>
+                      <div style={{ fontWeight: '600', fontSize: '13px', marginBottom: '4px' }}>⚙️ Details</div>
+                      <div style={{ fontSize: '12px', color: '#64748B' }}>Title, platform, publish date/time, deadline, assignee, status, type, and pillar</div>
+                    </div>
+                    <div style={{ padding: '10px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px' }}>
+                      <div style={{ fontWeight: '600', fontSize: '13px', marginBottom: '4px' }}>📝 Content</div>
+                      <div style={{ fontSize: '12px', color: '#64748B' }}>Write your caption/script + get smart hashtag suggestions based on platform & pillar</div>
+                    </div>
+                    <div style={{ padding: '10px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px' }}>
+                      <div style={{ fontWeight: '600', fontSize: '13px', marginBottom: '4px' }}>🎨 Assets</div>
+                      <div style={{ fontSize: '12px', color: '#64748B' }}>Add links to Canva designs, Google Drive files, or other resources</div>
+                    </div>
+                    <div style={{ padding: '10px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px' }}>
+                      <div style={{ fontWeight: '600', fontSize: '13px', marginBottom: '4px' }}>💬 Comments</div>
+                      <div style={{ fontSize: '12px', color: '#64748B' }}>Collaborate with team - add feedback, notes, and discussions</div>
+                    </div>
+                    <div style={{ padding: '10px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px' }}>
+                      <div style={{ fontWeight: '600', fontSize: '13px', marginBottom: '4px' }}>✅ Approval</div>
+                      <div style={{ fontSize: '12px', color: '#64748B' }}>Assign reviewer and track approval status with timestamps</div>
+                    </div>
+                  </div>
+
+                  <h4 style={{ margin: '16px 0 12px', fontSize: '15px', fontWeight: '600', color: '#831843' }}>📋 Status Workflow</h4>
+                  <div style={{ padding: '12px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px', fontSize: '12px', lineHeight: '1.8', color: '#4B5563' }}>
+                    <div><strong>Draft</strong> → Initial creation</div>
+                    <div><strong>In Review</strong> → Awaiting approval from reviewer</div>
+                    <div><strong>Approved</strong> → Ready to schedule</div>
+                    <div><strong>Scheduled</strong> → Queued for publishing</div>
+                    <div><strong>Published</strong> → Live on platform</div>
+                  </div>
+                </>
+              )}
+
+              {helpTab === 'features' && (
+                <>
+                  <h4 style={{ margin: '0 0 12px', fontSize: '15px', fontWeight: '600', color: '#831843' }}>🖱️ Drag & Drop</h4>
+                  <div style={{ marginBottom: '16px', padding: '12px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px', border: '1px solid rgba(236, 72, 153, 0.12)' }}>
+                    <p style={{ margin: '0 0 8px', fontSize: '13px', lineHeight: '1.6', color: '#4B5563' }}>
+                      Reschedule content instantly by dragging cards to different days:
+                    </p>
+                    <ol style={{ margin: 0, paddingLeft: '20px', fontSize: '12px', color: '#64748B' }}>
+                      <li>Click and hold any content card</li>
+                      <li>Drag to a different day</li>
+                      <li>Release to drop</li>
+                      <li>✅ Updates immediately and syncs to Google Sheets</li>
+                    </ol>
+                  </div>
+
+                  <h4 style={{ margin: '16px 0 12px', fontSize: '15px', fontWeight: '600', color: '#831843' }}>🔍 Smart Filters</h4>
+                  <div style={{ marginBottom: '16px' }}>
+                    <p style={{ margin: '0 0 8px', fontSize: '13px', color: '#4B5563' }}>Filter your calendar to focus on specific content:</p>
+                    <div style={{ display: 'grid', gap: '8px', fontSize: '12px' }}>
+                      <div style={{ padding: '8px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '6px' }}>
+                        <strong>Team:</strong> See only content assigned to specific members
+                      </div>
+                      <div style={{ padding: '8px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '6px' }}>
+                        <strong>Platform:</strong> Filter by TikTok, Instagram, or YouTube
+                      </div>
+                      <div style={{ padding: '8px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '6px' }}>
+                        <strong>Status:</strong> Show only drafts, in review, approved, etc.
+                      </div>
+                      <div style={{ padding: '8px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '6px' }}>
+                        <strong>Pillar:</strong> Filter by content pillar (Weight Loss, TRT, HRT, etc.)
+                      </div>
+                      <div style={{ padding: '8px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '6px' }}>
+                        <strong>Type:</strong> Filter by content type (Educational, Testimonial, Q&A, etc.)
+                      </div>
+                    </div>
+                  </div>
+
+                  <h4 style={{ margin: '16px 0 12px', fontSize: '15px', fontWeight: '600', color: '#831843' }}>📱 Views</h4>
+                  <div style={{ display: 'grid', gap: '10px' }}>
+                    <div style={{ padding: '10px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px' }}>
+                      <div style={{ fontWeight: '600', fontSize: '13px', marginBottom: '4px' }}>📅 Month View</div>
+                      <div style={{ fontSize: '12px', color: '#64748B' }}>Overview of the entire month - great for long-term planning. Shows up to 3 items per day.</div>
+                    </div>
+                    <div style={{ padding: '10px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px' }}>
+                      <div style={{ fontWeight: '600', fontSize: '13px', marginBottom: '4px' }}>📊 Week View</div>
+                      <div style={{ fontSize: '12px', color: '#64748B' }}>Detailed view of one week - shows ALL content with more space. Today is highlighted.</div>
+                    </div>
+                  </div>
+
+                  <h4 style={{ margin: '16px 0 12px', fontSize: '15px', fontWeight: '600', color: '#831843' }}>🔄 Real-Time Sync</h4>
+                  <div style={{ padding: '12px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px', fontSize: '12px', lineHeight: '1.8', color: '#4B5563' }}>
+                    <div>✅ Changes appear instantly on your calendar</div>
+                    <div>✅ Syncs to Google Sheets in the background</div>
+                    <div>✅ Auto-refreshes every 60 seconds</div>
+                    <div>✅ Other team members see updates automatically</div>
+                  </div>
+
+                  <h4 style={{ margin: '16px 0 12px', fontSize: '15px', fontWeight: '600', color: '#831843' }}>#️⃣ Smart Hashtags</h4>
+                  <div style={{ padding: '12px', background: 'rgba(236, 72, 153, 0.06)', borderRadius: '8px', fontSize: '12px', lineHeight: '1.6', color: '#4B5563' }}>
+                    Get platform-specific hashtag suggestions based on your content pillar! The calendar automatically suggests relevant hashtags for each platform + pillar combination. Click "Add to Caption" to insert them.
+                  </div>
+                </>
+              )}
+
+              {helpTab === 'tips' && (
+                <>
+                  <h4 style={{ margin: '0 0 12px', fontSize: '15px', fontWeight: '600', color: '#831843' }}>💡 Pro Tips</h4>
+                  
+                  <h5 style={{ margin: '16px 0 8px', fontSize: '14px', fontWeight: '600', color: '#9D174D' }}>Planning</h5>
+                  <div style={{ display: 'grid', gap: '8px', marginBottom: '16px' }}>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span>Use <strong>Week View</strong> for detailed day-by-day scheduling</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span>Use <strong>Month View</strong> to spot gaps in your content calendar</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span>Set <strong>deadlines 2-3 days before</strong> publish date</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span>Plan <strong>2-4 weeks ahead</strong> for best results</span>
+                    </div>
+                  </div>
+
+                  <h5 style={{ margin: '16px 0 8px', fontSize: '14px', fontWeight: '600', color: '#9D174D' }}>Workflow</h5>
+                  <div style={{ display: 'grid', gap: '8px', marginBottom: '16px' }}>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span>Use <strong>Templates</strong> for recurring content to save time</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span>Create content in <strong>batches</strong> - it's more efficient</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span>Set status to <strong>In Review</strong> when ready for feedback</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span>Check for <strong>⚠ Overdue</strong> items daily</span>
+                    </div>
+                  </div>
+
+                  <h5 style={{ margin: '16px 0 8px', fontSize: '14px', fontWeight: '600', color: '#9D174D' }}>Team Collaboration</h5>
+                  <div style={{ display: 'grid', gap: '8px', marginBottom: '16px' }}>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span>Use <strong>Comments</strong> to discuss content without external tools</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span>Assign <strong>Reviewers</strong> for quality control</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span>Filter by your name to see <strong>only your tasks</strong></span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span>Link <strong>all assets</strong> in the Assets tab for easy access</span>
+                    </div>
+                  </div>
+
+                  <h5 style={{ margin: '16px 0 8px', fontSize: '14px', fontWeight: '600', color: '#9D174D' }}>Content Strategy</h5>
+                  <div style={{ display: 'grid', gap: '8px', marginBottom: '16px' }}>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span><strong>Balance content pillars</strong> across the week</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span><strong>Vary content types</strong> - mix educational, testimonials, Q&A</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span>Check <strong>Published</strong> filter to see what's performing</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>✅</span>
+                      <span>Use <strong>suggested hashtags</strong> for better reach</span>
+                    </div>
+                  </div>
+
+                  <h5 style={{ margin: '16px 0 8px', fontSize: '14px', fontWeight: '600', color: '#9D174D' }}>Quick Actions</h5>
+                  <div style={{ display: 'grid', gap: '8px' }}>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>🖱️</span>
+                      <span><strong>Click empty day</strong> → Create content</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>🖱️</span>
+                      <span><strong>Click content card</strong> → Edit/view details</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>🖱️</span>
+                      <span><strong>Drag card</strong> → Reschedule to different day</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#4B5563' }}>
+                      <span>⌨️</span>
+                      <span><strong>Press Enter</strong> → Submit comment (in comment field)</span>
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: '20px', padding: '12px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                    <div style={{ fontSize: '13px', fontWeight: '600', color: '#059669', marginBottom: '6px' }}>💡 Need More Help?</div>
+                    <div style={{ fontSize: '12px', color: '#64748B' }}>
+                      Click the <strong>💡 Suggestions</strong> button to send feedback or ask questions!
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-ghost" onClick={() => setShowHelpModal(false)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Suggestion Modal */}
+      {showSuggestionModal && (
+        <div className="modal-overlay" onClick={() => setShowSuggestionModal(false)}>
+          <div className="modal" style={{ maxWidth: '500px' }} onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '700', fontFamily: "'Space Mono', monospace", color: '#831843' }}>
+                💡 Submit Suggestion
+              </h3>
+              <p style={{ margin: '8px 0 0', fontSize: '13px', color: '#64748B' }}>
+                Share your ideas, report bugs, or give feedback
+              </p>
+            </div>
+            <div className="modal-body">
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', marginBottom: '6px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Your Name (Optional)
+                </label>
+                <input 
+                  type="text" 
+                  className="input-field" 
+                  placeholder="Your name..." 
+                  value={suggestion.name} 
+                  onChange={e => setSuggestion({ ...suggestion, name: e.target.value })} 
+                />
+              </div>
+
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', marginBottom: '6px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Your Email (Optional)
+                </label>
+                <input 
+                  type="email" 
+                  className="input-field" 
+                  placeholder="your.email@example.com" 
+                  value={suggestion.email} 
+                  onChange={e => setSuggestion({ ...suggestion, email: e.target.value })} 
+                />
+              </div>
+
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', marginBottom: '6px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Suggestion Type
+                </label>
+                <select 
+                  className="select-field" 
+                  value={suggestion.type} 
+                  onChange={e => setSuggestion({ ...suggestion, type: e.target.value })}
+                >
+                  <option value="feature">💡 Feature Request</option>
+                  <option value="bug">🐛 Bug Report</option>
+                  <option value="improvement">✨ Improvement</option>
+                  <option value="feedback">💬 General Feedback</option>
+                </select>
+              </div>
+
+              <div style={{ marginBottom: '16px' }}>
+                <label style={{ display: 'block', marginBottom: '6px', color: '#9D174D', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  Message *
+                </label>
+                <textarea 
+                  className="textarea-field" 
+                  placeholder="Describe your suggestion, bug, or feedback..." 
+                  value={suggestion.message} 
+                  onChange={e => setSuggestion({ ...suggestion, message: e.target.value })} 
+                  style={{ minHeight: '120px' }}
+                  required
+                />
+              </div>
+
+              <div style={{ 
+                background: 'rgba(236, 72, 153, 0.08)', 
+                borderRadius: '8px', 
+                padding: '12px', 
+                fontSize: '12px', 
+                color: '#64748B',
+                border: '1px solid rgba(236, 72, 153, 0.15)'
+              }}>
+                📧 This will open your email client to send to <strong style={{ color: '#831843' }}>daniel@fountain.net</strong>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-ghost" onClick={() => setShowSuggestionModal(false)}>Cancel</button>
+              <button 
+                className="btn btn-primary" 
+                onClick={handleSubmitSuggestion}
+                disabled={!suggestion.message.trim()}
+              >
+                📧 Send Suggestion
+              </button>
             </div>
           </div>
         </div>

@@ -12,6 +12,8 @@ A React-based content calendar application for managing social media content wit
 - 📊 Status tracking and filtering
 - 💬 Comments and approval workflow
 - 📋 Recurring content templates
+- ❓ Interactive "How It Works" guide
+- 💡 Built-in suggestion/feedback form
 
 ## Tech Stack
 
