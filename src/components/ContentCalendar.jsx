@@ -1313,7 +1313,6 @@ const ContentCalendar = () => {
           border: '2px solid rgba(255, 255, 255, 0.2)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span style={{ fontSize: '24px' }}>🧪</span>
             <div>
               <div style={{ fontSize: '16px', fontWeight: '700', marginBottom: '4px' }}>
                 DEMO MODE - Sample Data
@@ -1342,7 +1341,7 @@ const ContentCalendar = () => {
           </h1>
           <p style={{ margin: '4px 0 0', color: '#9D174D', fontSize: '13px' }}>
             Organic Content Team • Fountain
-            {syncing && <span style={{ marginLeft: '12px', color: '#EC4899' }}>🔄 Syncing...</span>}
+            {syncing && <span style={{ marginLeft: '12px', color: '#EC4899' }}>Syncing...</span>}
           </p>
         </div>
         
@@ -1366,23 +1365,23 @@ const ContentCalendar = () => {
             </div>
           )}
           <button className="btn btn-ghost btn-sm" onClick={() => setShowTemplateModal(true)}>
-            📋 Templates
+            Templates
           </button>
           <button className="btn btn-ghost btn-sm" onClick={handleDownloadCSV}>
-            📥 Download
+            Download
           </button>
           <button className="btn btn-ghost btn-sm" onClick={() => setShowSuggestionModal(true)}>
-            💡 Suggestions
+            Feedback
           </button>
           <button className="btn btn-ghost btn-sm" onClick={() => setShowHelpModal(true)}>
-            ❓ How It Works
+            Help
           </button>
           <button 
             className="btn btn-ghost btn-sm" 
             onClick={toggleDarkMode}
             title="Toggle Dark Mode"
           >
-            {darkMode ? '☀️' : '🌙'}
+            {darkMode ? 'Light' : 'Dark'}
           </button>
           <div className="view-toggle">
             <button className={viewMode === 'month' ? 'active' : ''} onClick={() => setViewMode('month')}>Month</button>
@@ -1396,7 +1395,7 @@ const ContentCalendar = () => {
         <input
           type="text"
           className="input-field"
-          placeholder="🔍 Search by title, caption, platform, type, or pillar..."
+          placeholder="Search by title, caption, platform, type, or pillar..."
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           style={{ maxWidth: '500px' }}
@@ -1429,13 +1428,13 @@ const ContentCalendar = () => {
             {selectedContentIds.length} selected
           </span>
           <button className="btn btn-sm" style={{ background: '#10B981', color: 'white' }} onClick={() => handleBulkStatusChange('approved')}>
-            ✓ Approve
+            Approve
           </button>
           <button className="btn btn-sm" style={{ background: '#F59E0B', color: 'white' }} onClick={() => handleBulkStatusChange('review')}>
-            ⏳ Set to Review
+            Set to Review
           </button>
           <button className="btn btn-sm" style={{ background: '#6366F1', color: 'white' }} onClick={() => handleBulkStatusChange('scheduled')}>
-            📅 Schedule
+            Schedule
           </button>
           <select 
             className="filter-select"
@@ -1453,7 +1452,7 @@ const ContentCalendar = () => {
             ))}
           </select>
           <button className="btn btn-sm" style={{ background: '#EF4444', color: 'white' }} onClick={handleBulkDelete}>
-            🗑️ Delete
+            Delete
           </button>
           <button className="btn btn-ghost btn-sm" onClick={clearSelection} style={{ marginLeft: 'auto' }}>
             Clear
@@ -1958,10 +1957,10 @@ const ContentCalendar = () => {
               {editingContent && (
                 <>
                   <button className="btn" style={{ background: '#EF4444', color: 'white' }} onClick={() => handleDeleteContent(editingContent.id)}>
-                    🗑️ Delete
+                    Delete
                   </button>
                   <button className="btn" style={{ background: '#6366F1', color: 'white', marginRight: 'auto' }} onClick={() => { handleDuplicateContent(editingContent); }}>
-                    📋 Duplicate
+                    Duplicate
                   </button>
                 </>
               )}
@@ -1980,7 +1979,7 @@ const ContentCalendar = () => {
           <div className="modal" style={{ maxWidth: '500px' }} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '700', fontFamily: "'Space Mono', monospace", color: '#831843' }}>
-                📋 Recurring Templates
+                Recurring Templates
               </h3>
               <p style={{ margin: '8px 0 0', fontSize: '13px', color: '#64748B' }}>
                 Click to create content from a template
@@ -2021,7 +2020,7 @@ const ContentCalendar = () => {
           <div className="modal" style={{ maxWidth: '700px' }} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '700', fontFamily: "'Space Mono', monospace", color: '#831843' }}>
-                ❓ How the Content Calendar Works
+                How the Content Calendar Works
               </h3>
               <p style={{ margin: '8px 0 0', fontSize: '13px', color: '#64748B' }}>
                 Quick guide to using the calendar
@@ -2316,7 +2315,7 @@ const ContentCalendar = () => {
           <div className="modal" style={{ maxWidth: '500px' }} onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <h3 style={{ margin: 0, fontSize: '18px', fontWeight: '700', fontFamily: "'Space Mono', monospace", color: '#831843' }}>
-                💡 Submit Suggestion
+                Submit Feedback
               </h3>
               <p style={{ margin: '8px 0 0', fontSize: '13px', color: '#64748B' }}>
                 Share your ideas, report bugs, or give feedback
@@ -2358,10 +2357,10 @@ const ContentCalendar = () => {
                   value={suggestion.type} 
                   onChange={e => setSuggestion({ ...suggestion, type: e.target.value })}
                 >
-                  <option value="feature">💡 Feature Request</option>
-                  <option value="bug">🐛 Bug Report</option>
-                  <option value="improvement">✨ Improvement</option>
-                  <option value="feedback">💬 General Feedback</option>
+                  <option value="feature">Feature Request</option>
+                  <option value="bug">Bug Report</option>
+                  <option value="improvement">Improvement</option>
+                  <option value="feedback">General Feedback</option>
                 </select>
               </div>
 
@@ -2387,7 +2386,7 @@ const ContentCalendar = () => {
                 color: '#64748B',
                 border: '1px solid rgba(236, 72, 153, 0.15)'
               }}>
-                📧 This will open your email client to send to <strong style={{ color: '#831843' }}>daniel@fountain.net</strong>
+                This will open your email client to send to <strong style={{ color: '#831843' }}>daniel@fountain.net</strong>
               </div>
             </div>
             <div className="modal-footer">
@@ -2397,7 +2396,7 @@ const ContentCalendar = () => {
                 onClick={handleSubmitSuggestion}
                 disabled={!suggestion.message.trim()}
               >
-                📧 Send Suggestion
+                Send Feedback
               </button>
             </div>
           </div>
