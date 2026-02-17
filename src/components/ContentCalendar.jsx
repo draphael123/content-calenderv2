@@ -423,6 +423,7 @@ const ContentCalendar = () => {
     // Find next occurrence of this day
     const today = new Date();
     let targetDate = new Date(today);
+    targetDate.setDate(targetDate.getDate() + 1); // Start from tomorrow
     while (targetDate.getDay() !== template.day) {
       targetDate.setDate(targetDate.getDate() + 1);
     }
@@ -449,9 +450,19 @@ const ContentCalendar = () => {
       approvedAt: null,
       reminderSet: false,
     };
+    
     // Optimistic update
     setContents([...contents, content]);
     setShowTemplateModal(false);
+    
+    // Navigate to the month containing the new content
+    setCurrentDate(new Date(targetDate.getFullYear(), targetDate.getMonth(), 1));
+    if (viewMode === 'week') {
+      // For week view, set to the Sunday of that week
+      const sunday = new Date(targetDate);
+      sunday.setDate(targetDate.getDate() - targetDate.getDay());
+      setCurrentWeekStart(sunday);
+    }
     
     // Sync to API
     try {
@@ -481,6 +492,74 @@ const ContentCalendar = () => {
     // Reset form and close modal
     setSuggestion({ name: '', email: '', type: 'feature', message: '' });
     setShowSuggestionModal(false);
+  };
+
+  const handleDownloadCSV = () => {
+    // Prepare Content CSV
+    const contentHeaders = ['id', 'title', 'platform', 'assignee', 'status', 'type', 'pillar', 'publishDate', 'publishTime', 'deadline', 'caption', 'assetLinks', 'comments', 'reviewer', 'approvedBy', 'approvedAt', 'reminderSet'];
+    
+    const contentRows = contents.map(content => [
+      content.id,
+      content.title,
+      content.platform,
+      content.assignee,
+      content.status,
+      content.type,
+      content.pillar,
+      content.publishDate,
+      content.publishTime || '',
+      content.deadline || '',
+      content.caption || '',
+      JSON.stringify(content.assetLinks || []),
+      JSON.stringify(content.comments || []),
+      content.reviewer || '',
+      content.approvedBy || '',
+      content.approvedAt || '',
+      content.reminderSet || false
+    ]);
+
+    const contentCSV = [
+      contentHeaders.join(','),
+      ...contentRows.map(row => row.map(cell => {
+        // Escape commas and quotes in cell content
+        const cellStr = String(cell);
+        if (cellStr.includes(',') || cellStr.includes('"') || cellStr.includes('\n')) {
+          return `"${cellStr.replace(/"/g, '""')}"`;
+        }
+        return cellStr;
+      }).join(','))
+    ].join('\n');
+
+    // Prepare Team CSV
+    const teamHeaders = ['id', 'name', 'avatar', 'color', 'role'];
+    const teamRows = teamMembers.map(member => [
+      member.id,
+      member.name,
+      member.avatar,
+      member.color,
+      member.role
+    ]);
+
+    const teamCSV = [
+      teamHeaders.join(','),
+      ...teamRows.map(row => row.join(','))
+    ].join('\n');
+
+    // Download Content CSV
+    const contentBlob = new Blob([contentCSV], { type: 'text/csv;charset=utf-8;' });
+    const contentLink = document.createElement('a');
+    contentLink.href = URL.createObjectURL(contentBlob);
+    contentLink.download = `Content_Export_${new Date().toISOString().split('T')[0]}.csv`;
+    contentLink.click();
+
+    // Download Team CSV
+    setTimeout(() => {
+      const teamBlob = new Blob([teamCSV], { type: 'text/csv;charset=utf-8;' });
+      const teamLink = document.createElement('a');
+      teamLink.href = URL.createObjectURL(teamBlob);
+      teamLink.download = `Team_Export_${new Date().toISOString().split('T')[0]}.csv`;
+      teamLink.click();
+    }, 500);
   };
 
   const getAssignee = (id) => teamMembers.find(t => t.id === id);
@@ -1041,6 +1120,9 @@ const ContentCalendar = () => {
           )}
           <button className="btn btn-ghost btn-sm" onClick={() => setShowTemplateModal(true)}>
             📋 Templates
+          </button>
+          <button className="btn btn-ghost btn-sm" onClick={handleDownloadCSV}>
+            📥 Download
           </button>
           <button className="btn btn-ghost btn-sm" onClick={() => setShowSuggestionModal(true)}>
             💡 Suggestions

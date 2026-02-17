@@ -61,6 +61,7 @@ Located at the top, contains:
 
 #### Right Side:
 - **📋 Templates Button** - Opens recurring content templates
+- **📥 Download Button** - Export calendar data as CSV files
 - **💡 Suggestions Button** - Opens feedback/suggestion form
 - **❓ How It Works Button** - Opens interactive help guide
 - **View Toggle** - Switch between Month/Week view
@@ -479,6 +480,59 @@ Suggested: #testosteronetherapy #menshealth #hormoneoptimization
 
 ---
 
+## 📥 Download Spreadsheet Data
+
+### Export to CSV
+
+Access via **📥 Download** button in header.
+
+**Purpose:**
+- Export your entire calendar to CSV files
+- Backup your content data
+- Import into other tools
+- Share with team members
+- Archive for records
+
+**What Gets Downloaded:**
+
+When you click the Download button, it automatically downloads **2 CSV files**:
+
+1. **Content_Export_[DATE].csv**
+   - All your content entries
+   - Complete with all fields (title, platform, dates, captions, etc.)
+   - JSON fields properly formatted
+   - Ready to import into Google Sheets or Excel
+
+2. **Team_Export_[DATE].csv**
+   - All team member information
+   - IDs, names, avatars, colors, roles
+   - Ready to import or share
+
+**File Format:**
+- Standard CSV format
+- Compatible with Google Sheets, Excel, Numbers
+- UTF-8 encoding for emoji support
+- Properly escaped quotes and commas
+
+**Use Cases:**
+- 📊 **Backup** - Save a snapshot of your calendar
+- 🔄 **Migration** - Move data to another system
+- 📈 **Analysis** - Import into spreadsheet for reporting
+- 👥 **Sharing** - Send to stakeholders who don't have access
+- 📝 **Archive** - Keep historical records
+- 🔍 **Audit** - Review past content planning
+
+**How It Works:**
+1. Click **📥 Download** button in header
+2. Two CSV files download automatically (500ms apart)
+3. Files are named with current date
+4. Open in any spreadsheet application
+5. Data is exactly as shown in calendar
+
+**Note:** If you're using the calendar in demo mode (no Google Sheets connection), this downloads the mock data currently displayed.
+
+---
+
 ## 📋 Recurring Templates
 
 ### Templates Modal
@@ -514,13 +568,14 @@ Access via **📋 Templates** button in header.
 1. Click any template card
 2. Automatically creates new content with:
    - Title = Template name
-   - Day = Next occurrence of that weekday
+   - Day = Next occurrence of that weekday (starting from tomorrow)
    - Platform, Type, Pillar = Pre-set
    - Status = Draft
    - Assignee = Current user
    - Default time = 10:00 AM
 3. ✅ Appears on calendar immediately
-4. Edit to customize
+4. 📅 Calendar automatically navigates to show the new content
+5. Edit to customize
 
 **Use Cases:**
 - Maintain consistent posting schedule
@@ -867,8 +922,10 @@ Located at bottom of calendar, shows all available options:
 ## 🚀 What's Next?
 
 ### Recently Added Features ✅
+- 📥 Download spreadsheet data as CSV files
 - 💡 Suggestion form (sends to daniel@fountain.net)
 - ❓ Interactive "How It Works" guide built into the website
+- 🔧 Fixed templates to automatically navigate to created content
 
 ### Roadmap Features (Not Yet Implemented)
 - 📧 Email/Slack deadline reminders (automated)
